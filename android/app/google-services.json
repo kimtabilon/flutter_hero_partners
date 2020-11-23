@@ -1,0 +1,98 @@
+{
+  "project_info": {
+    "project_number": "222694061165",
+    "firebase_url": "https://hero-app-96074.firebaseio.com",
+    "project_id": "hero-app-96074",
+    "storage_bucket": "hero-app-96074.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:222694061165:android:69fdeeb374b7cbe7387b64",
+        "android_client_info": {
+          "package_name": "com.mjsitechsolutions.hero_partners"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "222694061165-7vica24uomvbupdg70u6qp4euuk1hspr.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDnx4p3VkNi5RkaqwC3gdlIO5D31n4zPOE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "222694061165-7vica24uomvbupdg70u6qp4euuk1hspr.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:222694061165:android:33d15da1addb9317387b64",
+        "android_client_info": {
+          "package_name": "com.mjsitechsolutions.heropartners"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "222694061165-7vica24uomvbupdg70u6qp4euuk1hspr.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDnx4p3VkNi5RkaqwC3gdlIO5D31n4zPOE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "222694061165-7vica24uomvbupdg70u6qp4euuk1hspr.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:222694061165:android:46124620567ff80a387b64",
+        "android_client_info": {
+          "package_name": "com.mjsitechsolutions.heroservices"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "222694061165-7vica24uomvbupdg70u6qp4euuk1hspr.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDnx4p3VkNi5RkaqwC3gdlIO5D31n4zPOE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "222694061165-7vica24uomvbupdg70u6qp4euuk1hspr.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
