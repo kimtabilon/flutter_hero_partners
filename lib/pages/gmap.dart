@@ -1,50 +1,35 @@
 import 'dart:async';
-
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-
+import 'package:intl/intl.dart';
 import 'dart:math' show cos, sqrt, asin;
 
 import 'package:location/location.dart' as geo;
 
-// void main() {
-//   runApp(GMap());
-// }
-// class GMap extends StatelessWidget {
-//   @override
-//
-//   final String AddressDetails;
-//
-//   GMap(this.AddressDetails, {Key key}): super(key: key);
-//   Widget build(BuildContext context) {
-//     return MaterialApp(
-//       theme: ThemeData(
-//         primarySwatch: Colors.blue,
-//       ),
-//       home: MapView(AddressDetails),
-//     );
-//   }
-// }
 
 class GMap extends StatefulWidget {
   @override
   final String AddressDetails;
+  final String BookingID;
 
-  GMap(this.AddressDetails, {Key key}): super(key: key);
+  GMap(this.AddressDetails,this.BookingID, {Key key}): super(key: key);
   _GMapState createState() => _GMapState();
 }
 
 class _GMapState extends State<GMap> {
+  final db = FirebaseFirestore.instance;
   CameraPosition _initialLocation = CameraPosition(target: LatLng(0.0, 0.0));
   GoogleMapController mapController;
   geo.Location location = geo.Location();
   StreamSubscription<geo.LocationData> locationSubscription;
   final Geolocator _geolocator = Geolocator();
 
-  bool liveLoc = false;
-  String liveLocText = "Off";
+  bool liveLoc = true;
+  String liveLocText = "On";
   Position _currentPosition;
   String _currentAddress;
 
@@ -112,25 +97,43 @@ class _GMapState extends State<GMap> {
 
   // Method for retrieving the current location
   _getCurrentLocation() async {
-    await _geolocator
-        .getCurrentPosition(desiredAccuracy: LocationAccuracy.high)
-        .then((Position position) async {
-      setState(() {
-        _currentPosition = position;
-        print('CURRENT POS: $_currentPosition');
-        mapController.animateCamera(
-          CameraUpdate.newCameraPosition(
-            CameraPosition(
-              target: LatLng(position.latitude, position.longitude),
-              zoom: 18.0,
+
+
+      await _geolocator
+          .getCurrentPosition(desiredAccuracy: LocationAccuracy.high)
+          .then((Position position) async {
+
+        // DateFormat dateFormat = DateFormat("yyyy-MM-dd HH:mm:ss");
+        //
+        // await db.collection('locate').add(
+        //     {
+        //       'booking_id': widget.BookingID,
+        //       'date' : dateFormat.format(DateTime.now()),
+        //       'lat' : position.latitude,
+        //       'lng' : position.longitude,
+        //     }
+        // );
+
+        setState(() {
+          _currentPosition = position;
+          print('CURRENT POS: $_currentPosition');
+          mapController.animateCamera(
+            CameraUpdate.newCameraPosition(
+              CameraPosition(
+                target: LatLng(position.latitude, position.longitude),
+                zoom: 18.0,
+              ),
             ),
-          ),
-        );
+          );
+        });
+        await _getAddress();
+      }).catchError((e) {
+        print(e);
       });
-      await _getAddress();
-    }).catchError((e) {
-      print(e);
-    });
+
+
+
+
   }
 
   // Method for retrieving the address
@@ -323,8 +326,32 @@ class _GMapState extends State<GMap> {
       destinationAddressController.text = widget.AddressDetails;
       _destinationAddress = widget.AddressDetails;
     });
+    locationSubscription = location.onLocationChanged.listen((geo.LocationData currentLocation) {
+        _getCurrentLocation();
+    });
 
-    _getCurrentLocation();
+    const oneSec = const Duration(seconds: 20);
+    new Timer.periodic(oneSec, (Timer t) async {
+
+      await _geolocator
+          .getCurrentPosition(desiredAccuracy: LocationAccuracy.high)
+          .then((Position position) async {
+
+        DateFormat dateFormat = DateFormat("yyyy-MM-dd HH:mm:ss");
+
+        await db.collection('locate').add(
+            {
+              'booking_id': widget.BookingID,
+              'date' : dateFormat.format(DateTime.now()),
+              'lat' : position.latitude,
+              'lng' : position.longitude,
+            }
+        );
+        print("LOCATION SAVED");
+      }).catchError((e) {
+        print(e);
+      });
+    });
     // locationSubscription = location.onLocationChanged.listen((geo.LocationData currentLocation) {
     //   _getCurrentLocation();
     // });
@@ -554,16 +581,19 @@ class _GMapState extends State<GMap> {
                           ),
                           onTap: () {
                             if(liveLoc == false){
-                              locationSubscription = location.onLocationChanged.listen((geo.LocationData currentLocation) {
-                                _getCurrentLocation();
-                              });
+                              // locationSubscription = location.onLocationChanged.listen((geo.LocationData currentLocation) {
+                              //
+                              //     _getCurrentLocation();
+                              //
+                              // });
+                              locationSubscription.resume();
                               liveLoc = true;
                               setState(() {
                                 liveLocText = 'On';
                               });
 
                             }else{
-                              locationSubscription.cancel();
+                              locationSubscription.pause();
                               liveLoc = false;
                               setState(() {
                                 liveLocText = 'Off';

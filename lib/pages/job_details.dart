@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -11,6 +12,7 @@ import 'package:hero_partners/pages/gmap.dart';
 import 'package:hero_partners/pages/job.dart';
 import 'package:hero_partners/pages/manage_jobs.dart';
 import 'package:intl/intl.dart';
+import 'package:toast/toast.dart';
 final _formKey = GlobalKey<FormState>();
 final TextEditingController reasonController = TextEditingController();
 class JobDetails extends StatefulWidget {
@@ -127,12 +129,22 @@ class _JobDetailsState extends State<JobDetails> {
                                               Column(
                                                 crossAxisAlignment: CrossAxisAlignment.start,
                                                 children: [
-                                                  Text(Servicesnapshot.data.get('name'),style: TextStyle(
-                                                      fontSize: 20,fontWeight: FontWeight.bold
-                                                  )),
-                                                  Text(snapshot.data.get('customer_address'),style: TextStyle(
-                                                      fontSize: 12,color: Colors.grey[600]
-                                                  )),
+                                                  Container(
+                                                    width: 200,
+                                                    child:
+                                                    Text(Servicesnapshot.data.get('name'),
+                                                      style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold),
+                                                      overflow: TextOverflow.visible,softWrap: true,),
+                                                  ),
+
+                                                  Container(
+                                                    width: 200,
+                                                    child:
+                                                    Text(snapshot.data.get('customer_address'),
+                                                      style: TextStyle(fontSize: 12,color: Colors.grey[600]),
+                                                      overflow: TextOverflow.visible,softWrap: true,),
+                                                  ),
+
                                                   Text(
                                   DateFormat('yyyy.MM.dd | HH:mm a').format(DateTime.parse(snapshot.data.get('schedule'))).toString()
                                                       ,style: TextStyle(
@@ -301,9 +313,20 @@ class _JobDetailsState extends State<JobDetails> {
                                               FlatButton(
                                                   color: Color(0xFF13869f),
                                                   onPressed: (){
-                                                    // Navigator.push(
-                                                    //     context,
-                                                    //     MaterialPageRoute(builder: (context) => GMap(snapshot.data.get('customer_address'))));
+
+                                                    try{
+                                                        if(Platform.isAndroid) {
+                                                          Navigator.push(
+                                                              context, MaterialPageRoute(
+                                                                  builder: (context) =>
+                                                                      GMap(snapshot.data.get('customer_address'),snapshot.data.id)));
+                                                        }
+
+                                                      }catch (e){
+                                                        Toast.show("Sorry, The map can be only access in android platform.", context, duration: Toast.LENGTH_LONG, gravity:  Toast.BOTTOM);
+                                                      }
+
+
                                                   },
                                                   child: Text("GET DIRECTIONS", style: TextStyle(
                                                     color: Colors.white,fontSize: 12.0,

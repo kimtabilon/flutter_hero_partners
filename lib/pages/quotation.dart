@@ -6,6 +6,19 @@ import 'package:hero_partners/pages/quotation_details.dart';
 import 'package:hero_partners/widgets/provider_widget.dart';
 import 'package:empty_widget/empty_widget.dart';
 import 'package:intl/intl.dart';
+
+
+void main() async {
+  runApp(
+    MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: Scaffold(
+        body: Quotation(),
+      ),
+    ),
+  );
+}
+
 class Quotation extends StatefulWidget {
   @override
   _QuotationState createState() => _QuotationState();
@@ -50,13 +63,13 @@ class _QuotationState extends State<Quotation> {
         }else{
           return Padding(
             padding: const EdgeInsets.all(8.0),
-            child: new ListView(
+            child: ListView(
                 physics: ClampingScrollPhysics(),
                 shrinkWrap: true,
                 children: snapshot.data.docs.map((booking) {
 
                   return FutureBuilder<bool>(
-                    future: getExistingSnapshots(context,booking.id),
+                    future: getExistingSnapshots(context,booking.id,booking.get('service_option_id')),
                     builder: (BuildContext context, AsyncSnapshot<bool> Checksnapshot) {
 
                       if(Checksnapshot.hasData){
@@ -64,7 +77,7 @@ class _QuotationState extends State<Quotation> {
 
                           return Padding(
                             padding: const EdgeInsets.all(8),
-                            child: new Column(
+                            child: Column(
                               children: [
                                 Container(
                                     child: StreamBuilder<DocumentSnapshot>(
@@ -131,7 +144,7 @@ class _QuotationState extends State<Quotation> {
                                         }
                                     ),
                                     decoration:
-                                    new BoxDecoration(
+                                     BoxDecoration(
                                         color: Colors.white,
                                         boxShadow: [
                                           BoxShadow(
@@ -160,22 +173,6 @@ class _QuotationState extends State<Quotation> {
                       return Container();
                     },
                   );
-
-
-                      
-
-
-
-
-
-
-
-
-
-
-
-
-
 
                 }).toList()
 
@@ -237,14 +234,30 @@ Stream<QuerySnapshot> getBookingDataSnapshots(BuildContext context) async* {
 }
 
 
-Future<bool> getExistingSnapshots(BuildContext context,String BookingID) async {
+Future<bool> getExistingSnapshots(BuildContext context,String BookingID,String ServiceOption) async {
   final uid = await Provider.of(context).auth.getCurrentUID();
   var HeroData = await FirebaseFirestore.instance.collection('hero').where('profile_id', isEqualTo: uid).get();
   var QuoteData = await FirebaseFirestore.instance.collection('quote')
       .where('hero_id', isEqualTo:HeroData.docs[0].id)
       .where('booking_id', isEqualTo: BookingID).get();
   if(QuoteData.docs.length ==  0) {
-    return true;
+
+    var ServicesData = await FirebaseFirestore.instance.collection('hero_services')
+        .where('profile_id', isEqualTo: uid)
+        .where('status', isEqualTo: 'active').snapshots();
+    await for (var ServicesSnapshot in ServicesData) {
+      for (var ServicesDoc in ServicesSnapshot.docs) {
+        if (ServiceOption == ServicesDoc.get('service_option_id')) {
+          return true;
+        }
+
+        if (ServicesSnapshot.docs.last.id == ServicesDoc.id) {
+          return false;
+        }
+      }
+    }
+
+
   }else{
     return false;
   }
