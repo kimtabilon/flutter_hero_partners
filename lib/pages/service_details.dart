@@ -77,6 +77,12 @@ class _ServiceDetailsState extends State<ServiceDetails> {
                                         color: Color(0xFF93ca68),
                                         size: 50.0);
                                   }
+                                  bool _showrate = true;
+                                  if(Servicesnapshot.data.get('service_type') == "quotation" || Servicesnapshot.data.get('service_type') == "session"){
+                                    _showrate = false;
+                                  }else{
+                                    _showrate = true;
+                                  }
 
                                   return new Column(
                                     children: [
@@ -177,9 +183,11 @@ class _ServiceDetailsState extends State<ServiceDetails> {
                                         ],
                                       ),
 
-                                      SizedBox(height: 20),
-                                      Divider(thickness:1,color: Colors.grey),
-                                      SizedBox(height: 20),
+
+                                      _showrate ? SizedBox(height: 20) : Container(),
+                                      _showrate ?Divider(thickness:1,color: Colors.grey)  : Container(),
+                                      _showrate ? SizedBox(height: 20) : Container(),
+                                      _showrate ?
                                       Column(
                                         crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
@@ -201,7 +209,7 @@ class _ServiceDetailsState extends State<ServiceDetails> {
                                           SizedBox(height: 5),
                                           Text(snapshot.data.get('hourly_rate').toString()),
                                         ],
-                                      ),
+                                      ): Container(),
                                       SizedBox(height: 20),
                                       Divider(thickness:1,color: Colors.grey),
                                       SizedBox(height: 20),

@@ -1,0 +1,97 @@
+{
+  "project_info": {
+    "project_number": "273248187449",
+    "project_id": "hero-app-dev",
+    "storage_bucket": "hero-app-dev.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:273248187449:android:f0c45562b2e7063cb0c9e8",
+        "android_client_info": {
+          "package_name": "com.mjsitechsolutions.heroadmin.dev"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "273248187449-o63bs02t27m0812ofupi80gco3klb8n7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAswXL_z3XTRo1A5yohuJoFvRlIoNO_Eq0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "273248187449-o63bs02t27m0812ofupi80gco3klb8n7.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:273248187449:android:debec30c2f216266b0c9e8",
+        "android_client_info": {
+          "package_name": "com.mjsitechsolutions.heropartners.dev"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "273248187449-o63bs02t27m0812ofupi80gco3klb8n7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAswXL_z3XTRo1A5yohuJoFvRlIoNO_Eq0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "273248187449-o63bs02t27m0812ofupi80gco3klb8n7.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:273248187449:android:20621615a72f7fe2b0c9e8",
+        "android_client_info": {
+          "package_name": "com.mjsitechsolutions.heroservices.dev"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "273248187449-o63bs02t27m0812ofupi80gco3klb8n7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAswXL_z3XTRo1A5yohuJoFvRlIoNO_Eq0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "273248187449-o63bs02t27m0812ofupi80gco3klb8n7.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

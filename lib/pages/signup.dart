@@ -134,7 +134,7 @@ class _SignUpState extends State<SignUp> {
                                   'profile_id': uid,
                                   'email': emailController.text.trim(),
                                   'password': passController.text,
-                                  'status': 'Inactive',
+                                  'status': 'Active',
                                   'created_at': currentPhoneDate,
                                   'updated_at': '',
                                   'edit_account': false,
@@ -506,8 +506,8 @@ _buildPasswordField(
           return 'This field is required.';
         }else if(value.trim().length < 6) {
           return 'Password should be at least 6 characters.';
-        }else if (strength < 0.5) {
-          return 'This password is weak.';
+        }else if (strength < 0.4) {
+          return 'You password must contain at least 1 uppercase, and 1 number.';
         }else if(passController.text.trim() != conpassController.text.trim()){
           return "Those passwords didn't match. Try again.";
         }

@@ -28,6 +28,27 @@ class _QuotationDetailsState extends State<QuotationDetails> {
         )),
         backgroundColor: Colors.white,
       ),
+      resizeToAvoidBottomInset: false,
+      bottomNavigationBar:
+             Padding(
+              padding: EdgeInsets.fromLTRB(8, 0, 8, 18),
+              child:
+              MaterialButton(
+                elevation: 0,
+                minWidth: double.maxFinite,
+                height: 60,
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => QuotationForm(widget.BookingID)));
+
+                },
+                color: Color(0xFF13869f),
+                child: Text('CONTINUE',
+                    style: TextStyle(color: Colors.white, fontSize: 18,fontWeight: FontWeight.bold)),
+                textColor: Colors.white,
+              ),
+            ),
 
       body:
       SafeArea(
@@ -175,6 +196,22 @@ class _QuotationDetailsState extends State<QuotationDetails> {
                                       Align(
                                         alignment: Alignment.centerLeft,
                                       ),
+                                      Text("Price Type", style: TextStyle(
+                                          fontSize: 12,color: Color(0xFF13869f),fontWeight: FontWeight.bold
+                                      )),
+                                      SizedBox(height: 5),
+                                      Text(booking.booking ? "Open Price" : "Set Price"),
+                                    ],
+                                  ),
+                                  SizedBox(height: 20),
+                                  Divider(thickness:1,color: Colors.grey),
+                                  SizedBox(height: 20),
+                                  Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Align(
+                                        alignment: Alignment.centerLeft,
+                                      ),
                                       Text("DETAILS", style: TextStyle(
                                           fontSize: 12,color: Color(0xFF13869f),fontWeight: FontWeight.bold
                                       )),
@@ -186,21 +223,21 @@ class _QuotationDetailsState extends State<QuotationDetails> {
                                   Divider(thickness:1,color: Colors.grey),
                                   SizedBox(height: 20),
 
-                                  MaterialButton(
-                                    elevation: 0,
-                                    minWidth: double.maxFinite,
-                                    height: 60,
-                                    onPressed: () {
-
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(builder: (context) => QuotationForm(widget.BookingID)));
-                                    },
-                                    color: Color(0xFF13869f),
-                                    child: Text('ACCEPT',
-                                        style: TextStyle(color: Colors.white, fontSize: 18,fontWeight: FontWeight.bold)),
-                                    textColor: Colors.white,
-                                  ),
+                                  // MaterialButton(
+                                  //   elevation: 0,
+                                  //   minWidth: double.maxFinite,
+                                  //   height: 60,
+                                  //   onPressed: () {
+                                  //
+                                  //     Navigator.push(
+                                  //         context,
+                                  //         MaterialPageRoute(builder: (context) => QuotationForm(widget.BookingID)));
+                                  //   },
+                                  //   color: Color(0xFF13869f),
+                                  //   child: Text('CONTINUE',
+                                  //       style: TextStyle(color: Colors.white, fontSize: 18,fontWeight: FontWeight.bold)),
+                                  //   textColor: Colors.white,
+                                  // ),
                                 ],
                               ),
                             ),
@@ -230,7 +267,9 @@ class QuotationData {
   final form_values;
   final timeline;
   final timeline_type;
-  const QuotationData(this.icon,this.service_name,this.schedule,this.customer_name,this.customer_address,this.form_values,this.timeline,this.timeline_type);
+  final booking;
+
+  const QuotationData(this.icon,this.service_name,this.schedule,this.customer_name,this.customer_address,this.form_values,this.timeline,this.timeline_type,this.booking);
 }
 
 
@@ -253,6 +292,7 @@ Stream<List<QuotationData>> getBookingDataSnapshots(BuildContext context,String 
         ListFinal,
         booking.get('timeline'),
         booking.get('timeline_type'),
+        booking.get('open_booking'),
       );
 
       data.add(BookingData);

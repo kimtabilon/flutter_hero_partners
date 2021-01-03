@@ -24,7 +24,9 @@ class ServiceOptionData {
 }
 
 Stream<QuerySnapshot> getServiceSnapshots(BuildContext context,String CategoryID) async* {
-  yield* FirebaseFirestore.instance.collection('service').where('service_category_id', isEqualTo: CategoryID).snapshots();
+  yield* FirebaseFirestore.instance.collection('service')
+      .where('service_category_id', isEqualTo: CategoryID)
+      .where('enable',isEqualTo: true).snapshots();
   // var services = FirebaseFirestore.instance.collection('service').where('service_category_id', isEqualTo: CategoryID).snapshots();
   //
   // var data = List<ServiceOptionData>();
@@ -111,7 +113,8 @@ class _ServicesState extends State<Services> {
                                     children: OptionSnapshot.data.docs.map((DocumentSnapshot Option) {
                                       return StreamBuilder<QuerySnapshot>(
                                         stream: FirebaseFirestore.instance.collection('service_option')
-                                            .where('service_id', isEqualTo: Option.id).snapshots(),
+                                            .where('service_id', isEqualTo: Option.id)
+                                            .where('enable',isEqualTo: true).snapshots(),
                                         builder: (context, AsyncSnapshot<QuerySnapshot> ServiceOptionsnapshot) {
                                           if (ServiceOptionsnapshot.connectionState == ConnectionState.waiting) {
                                             return const SpinKitDoubleBounce(

@@ -63,6 +63,8 @@ class _JobState extends State<Job> {
                     queueDetails = "For Confirmation";
                   }else if(booking.get('queue') == "active"){
                     queueDetails = "Active";
+                  }else if(booking.get('queue') == "in_progress"){
+                    queueDetails = "In Progress";
                   }else if(booking.get('queue') == "completed"){
                     queueDetails = "Completed";
                   }else if(booking.get('queue') == "cancelled"){
@@ -196,7 +198,15 @@ Stream<QuerySnapshot> getBookingDataSnapshots(BuildContext context,String JobSta
   final uid = await Provider.of(context).auth.getCurrentUID();
   var HeroData = await FirebaseFirestore.instance.collection('hero').where('profile_id', isEqualTo: uid).get();
   //yield* FirebaseFirestore.instance.collection('booking').where('hero_id', isEqualTo: HeroData.docs[0].id).snapshots();
-  yield* FirebaseFirestore.instance.collection('booking').where('hero_id', isEqualTo: HeroData.docs[0].id).where('queue', isEqualTo: JobStatus).snapshots();
+
+  if(JobStatus == 'active'){
+    yield* FirebaseFirestore.instance.collection('booking').where('hero_id', isEqualTo: HeroData.docs[0].id)
+        .where('queue',whereIn:[JobStatus,"in_progress"]).snapshots();
+  }else{
+    yield* FirebaseFirestore.instance.collection('booking').where('hero_id', isEqualTo: HeroData.docs[0].id)
+        .where('queue', isEqualTo: JobStatus).snapshots();
+  }
+
   //
   // var data = List<BookingData>();
   // await for (var bookingSnapshot in booking) {

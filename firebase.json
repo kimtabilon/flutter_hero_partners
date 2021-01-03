@@ -1,11 +1,21 @@
 {
-  "hosting": {
-    "site": "hero-partners",
+  "hosting": [ {
+    "target": "hero-partners",
     "public": "build/web",
     "ignore": [
       "firebase.json",
       "**/.*",
       "**/node_modules/**"
     ]
-  }
+  },
+    {
+      "target": "heropartners-dev",
+      "public": "build/web",
+      "ignore": [
+        "firebase.json",
+        "**/.*",
+        "**/node_modules/**"
+      ]
+    }
+  ]
 }

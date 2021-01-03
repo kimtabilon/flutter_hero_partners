@@ -69,7 +69,7 @@ class _QuotationState extends State<Quotation> {
                 children: snapshot.data.docs.map((booking) {
 
                   return FutureBuilder<bool>(
-                    future: getExistingSnapshots(context,booking.id,booking.get('service_option_id')),
+                    future: getExistingSnapshots(context,booking.id,booking.get('service_option_id'),booking.get('customer_address')),
                     builder: (BuildContext context, AsyncSnapshot<bool> Checksnapshot) {
 
                       if(Checksnapshot.hasData){
@@ -234,32 +234,134 @@ Stream<QuerySnapshot> getBookingDataSnapshots(BuildContext context) async* {
 }
 
 
-Future<bool> getExistingSnapshots(BuildContext context,String BookingID,String ServiceOption) async {
+Future<bool> getExistingSnapshots(BuildContext context,String BookingID,String ServiceOption, String CustomerAddress) async {
   final uid = await Provider.of(context).auth.getCurrentUID();
   var HeroData = await FirebaseFirestore.instance.collection('hero').where('profile_id', isEqualTo: uid).get();
-  var QuoteData = await FirebaseFirestore.instance.collection('quote')
-      .where('hero_id', isEqualTo:HeroData.docs[0].id)
-      .where('booking_id', isEqualTo: BookingID).get();
-  if(QuoteData.docs.length ==  0) {
+  var HeroAddress = await FirebaseFirestore.instance.collection('address').where('profile_id', isEqualTo: uid).get();
+  var ServiceOptionData = await FirebaseFirestore.instance.collection('service_option').doc(ServiceOption).get();
 
-    var ServicesData = await FirebaseFirestore.instance.collection('hero_services')
-        .where('profile_id', isEqualTo: uid)
-        .where('status', isEqualTo: 'active').snapshots();
-    await for (var ServicesSnapshot in ServicesData) {
-      for (var ServicesDoc in ServicesSnapshot.docs) {
-        if (ServiceOption == ServicesDoc.get('service_option_id')) {
-          return true;
-        }
 
-        if (ServicesSnapshot.docs.last.id == ServicesDoc.id) {
+  List<String> stringList = CustomerAddress.split(",");
+
+  if(ServiceOptionData.get('filter_city') && ServiceOptionData.get('filter_province')) {
+      if (stringList[2].toLowerCase().trim() == HeroAddress.docs[0].get('city').toLowerCase()
+          && stringList[3].toLowerCase() == HeroAddress.docs[0].get('province').toLowerCase()) {
+        var QuoteData = await FirebaseFirestore.instance.collection('quote')
+            .where('hero_id', isEqualTo:HeroData.docs[0].id)
+            .where('booking_id', isEqualTo: BookingID).get();
+        if(QuoteData.docs.length ==  0) {
+
+          var ServicesData = await FirebaseFirestore.instance.collection('hero_services')
+              .where('profile_id', isEqualTo: uid)
+              .where('status', isEqualTo: 'active').snapshots();
+          await for (var ServicesSnapshot in ServicesData) {
+            for (var ServicesDoc in ServicesSnapshot.docs) {
+              if (ServiceOption == ServicesDoc.get('service_option_id')) {
+                return true;
+              }
+
+              if (ServicesSnapshot.docs.last.id == ServicesDoc.id) {
+                return false;
+              }
+            }
+          }
+        }else{
           return false;
         }
+
+      } else {
+        return false;
       }
+
+  }else if(ServiceOptionData.get('filter_city')){
+
+    if (stringList[2].toLowerCase().trim() == HeroAddress.docs[0].get('city').toLowerCase()) {
+      var QuoteData = await FirebaseFirestore.instance.collection('quote')
+          .where('hero_id', isEqualTo:HeroData.docs[0].id)
+          .where('booking_id', isEqualTo: BookingID).get();
+      if(QuoteData.docs.length ==  0) {
+
+        var ServicesData = await FirebaseFirestore.instance.collection('hero_services')
+            .where('profile_id', isEqualTo: uid)
+            .where('status', isEqualTo: 'active').snapshots();
+        await for (var ServicesSnapshot in ServicesData) {
+          for (var ServicesDoc in ServicesSnapshot.docs) {
+            if (ServiceOption == ServicesDoc.get('service_option_id')) {
+              return true;
+            }
+
+            if (ServicesSnapshot.docs.last.id == ServicesDoc.id) {
+              return false;
+            }
+          }
+        }
+      }else{
+        return false;
+      }
+
+    } else {
+      return false;
+    }
+
+  }else if(ServiceOptionData.get('filter_province')){
+    if (stringList[3].toLowerCase().trim() == HeroAddress.docs[0].get('province').toLowerCase()) {
+      var QuoteData = await FirebaseFirestore.instance.collection('quote')
+          .where('hero_id', isEqualTo:HeroData.docs[0].id)
+          .where('booking_id', isEqualTo: BookingID).get();
+      if(QuoteData.docs.length ==  0) {
+
+        var ServicesData = await FirebaseFirestore.instance.collection('hero_services')
+            .where('profile_id', isEqualTo: uid)
+            .where('status', isEqualTo: 'active').snapshots();
+        await for (var ServicesSnapshot in ServicesData) {
+          for (var ServicesDoc in ServicesSnapshot.docs) {
+            if (ServiceOption == ServicesDoc.get('service_option_id')) {
+              return true;
+            }
+
+            if (ServicesSnapshot.docs.last.id == ServicesDoc.id) {
+              return false;
+            }
+          }
+        }
+      }else{
+        return false;
+      }
+
+    } else {
+      return false;
     }
 
 
   }else{
-    return false;
+
+
+        var QuoteData = await FirebaseFirestore.instance.collection('quote')
+            .where('hero_id', isEqualTo:HeroData.docs[0].id)
+            .where('booking_id', isEqualTo: BookingID).get();
+        if(QuoteData.docs.length ==  0) {
+
+          var ServicesData = await FirebaseFirestore.instance.collection('hero_services')
+              .where('profile_id', isEqualTo: uid)
+              .where('status', isEqualTo: 'active').snapshots();
+          await for (var ServicesSnapshot in ServicesData) {
+            for (var ServicesDoc in ServicesSnapshot.docs) {
+              if (ServiceOption == ServicesDoc.get('service_option_id')) {
+                return true;
+              }
+
+              if (ServicesSnapshot.docs.last.id == ServicesDoc.id) {
+                return false;
+              }
+            }
+          }
+        }else{
+          return false;
+        }
+
   }
 
+
+
 }
+

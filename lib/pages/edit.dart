@@ -73,7 +73,7 @@ class _EditState extends State<Edit>{
     final uid = await Provider.of(context).auth.getCurrentUID();
     var profileSnapshot = await FirebaseFirestore.instance.collection("profile").where('profile_id', isEqualTo: uid).get();
     await db.collection('profile').doc(profileSnapshot.docs[0].id)
-        .set(
+        .update(
         {
           'photo': dowurl.toString(),
         })

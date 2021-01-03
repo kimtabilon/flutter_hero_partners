@@ -32,6 +32,13 @@ class _ServiceFormState extends State<ServiceForm> {
   bool _isButtonDisabled = false;
   final formKey = GlobalKey<FormState>();
   Widget build(BuildContext context) {
+        bool _showrate = true;
+    if(widget.ServiceType == "quotation" || widget.ServiceType == "session"){
+      _showrate = false;
+    }else{
+      _showrate = true;
+    }
+
 
     return FlutterEasyLoading(
       child: Scaffold(
@@ -69,9 +76,9 @@ class _ServiceFormState extends State<ServiceForm> {
                   SizedBox(height: 15),
                   _TextAreaField(certController, 'Certification'),
                   SizedBox(height: 15),
-                  _buildNumberField(dailyrateController, 'Daily Rate'),
+                  _showrate ? _buildNumberField(dailyrateController, 'Daily Rate') : Container(),
                   SizedBox(height: 15),
-                  _buildNumberField(hourlyrateController, 'Hourly Rate'),
+                  _showrate ? _buildNumberField(hourlyrateController, 'Hourly Rate') : Container(),
                   SizedBox(height: 15),
                   MaterialButton(
                     elevation: 0,

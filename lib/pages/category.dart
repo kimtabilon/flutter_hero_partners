@@ -89,7 +89,7 @@ class _CategoryState extends State<Category> {
 
 
 Stream<QuerySnapshot> getCategorySnapshots(BuildContext context) async* {
-  yield* FirebaseFirestore.instance.collection('service_category').snapshots();
+  yield* FirebaseFirestore.instance.collection('service_category').where('enable',isEqualTo: true).snapshots();
 }
 
 Widget buildCategoryList(BuildContext context, DocumentSnapshot category){

@@ -17,7 +17,6 @@ final _formKey = GlobalKey<FormState>();
 final TextEditingController reasonController = TextEditingController();
 class JobDetails extends StatefulWidget {
   final String BookingID;
-
   JobDetails(this.BookingID, {Key key}): super(key: key);
   @override
   _JobDetailsState createState() => _JobDetailsState();
@@ -62,6 +61,7 @@ class _JobDetailsState extends State<JobDetails> {
 
                           bool confirm_status = false;
                           bool active_status = false;
+                          bool inprogress_status = false;
                           bool completed_status = false;
                           bool cancelled_status = false;
                           var queueDetails;
@@ -71,6 +71,9 @@ class _JobDetailsState extends State<JobDetails> {
                           }else if(snapshot.data.get('queue') == "active"){
                             queueDetails = "Active";
                             active_status = true;
+                          }else if(snapshot.data.get('queue') == "in_progress"){
+                            queueDetails = "In Progress";
+                            inprogress_status = true;
                           }else if(snapshot.data.get('queue') == "completed"){
                             queueDetails = "Completed";
                             completed_status = true;
@@ -307,6 +310,141 @@ class _JobDetailsState extends State<JobDetails> {
                                       active_status ?
                                       Column(
                                         children: [
+                                              Row(
+                                                mainAxisAlignment: MainAxisAlignment.center,
+                                                children: [
+                                                  FlatButton(
+                                                      minWidth:100,
+                                                      color: Color(0xFF13869f),
+                                                      onPressed: (){
+                                                        Navigator.push(
+                                                            context,
+                                                            MaterialPageRoute(builder: (context) => Chats(
+                                                                widget.BookingID,
+                                                                snapshot.data.get('service_option_id'),
+                                                                snapshot.data.get('customer_id'),
+                                                                snapshot.data.get('hero_id'))));
+                                                      },
+                                                      child: Text("CHAT WITH CLIENT", style: TextStyle(
+                                                        color: Colors.white,fontSize: 12.0,
+                                                      ))),
+                                                  SizedBox(width: 10),
+                                                  FlatButton(
+                                                      minWidth:100,
+                                                      color: Color(0xFF13869f),
+                                                      onPressed: (){
+                                                        Navigator.push(
+                                                            context,
+                                                            MaterialPageRoute(builder: (context) => ChatsAdmin(
+                                                                widget.BookingID,
+                                                                snapshot.data.get('service_option_id'),
+                                                                snapshot.data.get('customer_id'),
+                                                                snapshot.data.get('hero_id'))));
+                                                      },
+                                                      child: Text("CHAT WITH ADMIN", style: TextStyle(
+                                                        color: Colors.white,fontSize: 12.0,
+                                                      ))),
+                                                ],
+                                              ),
+
+
+
+                                          SizedBox(height: 10),
+                                          FlatButton(
+                                              minWidth: 250,
+                                              color: Color(0xFF93ca68),
+                                              onPressed: (){
+                                                AwesomeDialog(
+                                                    context: context,
+                                                    animType: AnimType.LEFTSLIDE,
+                                                    headerAnimationLoop: false,
+                                                    dialogType: DialogType.INFO,
+                                                    title: 'Confirmation',
+                                                    desc: 'Are you sure do you want to start this job?',
+                                                    btnOkOnPress: () {
+
+                                                      Navigator.pushReplacement(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                          builder: (context) => ManageJobs(),
+                                                        ),
+                                                      );
+                                                      Navigator.of(context, rootNavigator: true).pop();
+
+                                                      setState(() async {
+                                                        await db.collection('booking').doc(widget.BookingID)
+                                                            .update({
+                                                          'queue': 'in_progress',
+                                                        });
+
+                                                      });
+
+                                                    },
+                                                    btnCancelOnPress: () {
+                                                      Navigator.of(context, rootNavigator: true).pop();
+                                                    },
+                                                    btnOkText: "Confirm",
+                                                    onDissmissCallback: () {
+                                                      debugPrint('Dialog Dissmiss from callback');
+                                                    }).show();
+                                              },
+                                              child: Text("START JOB", style: TextStyle(
+                                                color: Colors.white,fontSize: 12.0,
+                                              ))),
+                                          SizedBox(height: 10),
+                                          FlatButton(
+                                              minWidth: 250,
+                                              color: Color(0xFFff0000),
+                                              onPressed: (){
+                                                AwesomeDialog(
+                                                    context: context,
+                                                    animType: AnimType.LEFTSLIDE,
+                                                    headerAnimationLoop: false,
+                                                    dialogType: DialogType.INFO,
+                                                    title: 'Confirmation',
+                                                    desc: 'Are you sure do you want to cancel this job?',
+                                                    btnOkOnPress: () {
+
+                                                      Navigator.pushReplacement(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                          builder: (context) => ManageJobs(),
+                                                        ),
+                                                      );
+                                                      Navigator.of(context, rootNavigator: true).pop();
+
+
+                                                      setState(() async {
+                                                        await db.collection('booking').doc(widget.BookingID)
+                                                            .set({
+                                                          'queue': 'cancelled',
+                                                          'reason': 'cancelled by hero',
+                                                        },SetOptions(merge: true));
+
+
+                                                      });
+
+                                                    },
+                                                    btnCancelOnPress: () {
+                                                      Navigator.of(context, rootNavigator: true).pop();
+                                                    },
+                                                    btnOkText: "Confirm",
+                                                    onDissmissCallback: () {
+                                                      debugPrint('Dialog Dissmiss from callback');
+                                                    }).show();
+                                              },
+                                              child: Text("CANCEL", style: TextStyle(
+                                                color: Colors.white,fontSize: 12.0,
+                                              ))),
+
+                                        ],
+
+                                      ) : Container(),
+
+                                      //in progress
+                                      inprogress_status ?
+                                      Column(
+                                        children: [
                                           Row(
                                             mainAxisAlignment: MainAxisAlignment.center,
                                             children: [
@@ -315,16 +453,16 @@ class _JobDetailsState extends State<JobDetails> {
                                                   onPressed: (){
 
                                                     try{
-                                                        if(Platform.isAndroid) {
-                                                          Navigator.push(
-                                                              context, MaterialPageRoute(
-                                                                  builder: (context) =>
-                                                                      GMap(snapshot.data.get('customer_address'),snapshot.data.id)));
-                                                        }
-
-                                                      }catch (e){
-                                                        Toast.show("Sorry, The map can be only access in android platform.", context, duration: Toast.LENGTH_LONG, gravity:  Toast.BOTTOM);
+                                                      if(Platform.isAndroid) {
+                                                        Navigator.push(
+                                                            context, MaterialPageRoute(
+                                                            builder: (context) =>
+                                                                GMap(snapshot.data.get('customer_address'),snapshot.data.id)));
                                                       }
+
+                                                    }catch (e){
+                                                      Toast.show("Sorry, The map can be only access in android platform.", context, duration: Toast.LENGTH_LONG, gravity:  Toast.BOTTOM);
+                                                    }
 
 
                                                   },

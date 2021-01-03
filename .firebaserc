@@ -1,5 +1,17 @@
 {
   "projects": {
     "default": "hero-app-96074"
+  },
+  "targets": {
+    "hero-app-96074": {
+      "hosting": {
+        "heropartners-dev": [
+          "heropartners-dev"
+        ],
+        "hero-partners": [
+          "heropartners"
+        ]
+      }
+    }
   }
 }

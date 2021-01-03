@@ -82,7 +82,7 @@ class _LoginState extends State<Login> {
                                 .where('status', isEqualTo: 'Active')
                                 .get();
 
-                            if(hero_status.docs.length > 0){
+                           if(hero_status.docs.length > 0){
                               try{
                                 final auth = Provider.of(context).auth;
                                 EasyLoading.show(status: 'loading...');
@@ -90,7 +90,9 @@ class _LoginState extends State<Login> {
                               } catch (error) {
                                 errorMessage = error.code;
                               }
-                            }
+                            }else{
+                             errorMessage = "Error";
+                           }
 
 
                             EasyLoading.dismiss();
@@ -98,7 +100,7 @@ class _LoginState extends State<Login> {
                             if (errorMessage != null) {
                               String alertMessage;
                               if(errorMessage == 'user-not-found'){
-                                alertMessage = 'User not found.';
+                                alertMessage = 'Wrong Email or Password.Please try again.';
                               }else{
                                 alertMessage = 'Wrong Email or Password.Please try again.';
                               }
