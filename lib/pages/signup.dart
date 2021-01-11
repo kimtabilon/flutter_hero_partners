@@ -165,10 +165,14 @@ class _SignUpState extends State<SignUp> {
                                   'zip': '',
                                 }
                             );
+                            Map<String, dynamic> CitySelected = {};
                             await db.collection('hero_settings').add(
                                 {
                                   'profile_id': uid,
                                   'offline': false,
+                                  'auto_confirm': false,
+                                  'block_dates': '',
+                                  'locations': CitySelected,
                                 }
                             );
                             await db.collection('profile').add(

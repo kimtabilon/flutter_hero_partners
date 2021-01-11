@@ -7,7 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:hero_partners/widgets/provider_widget.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
-import 'package:dash_chat/dash_chat.dart';
 
 
 class Chats extends StatefulWidget {

@@ -3,7 +3,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:hero_partners/pages/forgotpassword.dart';
 import 'package:hero_partners/pages/navigation.dart';
 import 'package:hero_partners/pages/signup.dart';
@@ -13,7 +12,6 @@ import 'package:hero_partners/services/auth_service.dart';
 final TextEditingController nameController = TextEditingController();
 final TextEditingController passwordController = TextEditingController();
 final FirebaseAuth firebaseAuth = FirebaseAuth.instance;
-final GoogleSignIn googleSignIn = GoogleSignIn();
 
 class Login extends StatefulWidget {
   @override

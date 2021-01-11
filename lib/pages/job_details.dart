@@ -11,6 +11,7 @@ import 'package:hero_partners/pages/chats_admin.dart';
 import 'package:hero_partners/pages/gmap.dart';
 import 'package:hero_partners/pages/job.dart';
 import 'package:hero_partners/pages/manage_jobs.dart';
+import 'package:hero_partners/pages/rate_form.dart';
 import 'package:intl/intl.dart';
 import 'package:toast/toast.dart';
 final _formKey = GlobalKey<FormState>();
@@ -181,11 +182,49 @@ class _JobDetailsState extends State<JobDetails> {
                                             color: Colors.white,fontSize: 12.0,
                                           ))),
 
+                                      SizedBox(height: 20),
+
+                                      StreamBuilder<QuerySnapshot>(
+                                        stream: getReviewDataSnapshots(context,widget.BookingID),
+                                        builder: (context,AsyncSnapshot<QuerySnapshot> snapshotReview) {
+
+                                              if (snapshot.hasError)
+                                              return const SpinKitDoubleBounce(
+                                              color: Color(0xFF93ca68),
+                                              size: 50.0);
+                                              switch (snapshot.connectionState) {
+                                                case ConnectionState.waiting:
+                                                  return const SpinKitDoubleBounce(
+                                                      color: Color(0xFF93ca68),
+                                                      size: 50.0);
+                                              default:
+
+
+                                                  return FlatButton(
+                                                      minWidth:250,
+                                                      color: Color(0xFF93ca68),
+                                                      onPressed: (){
+                                                      if(snapshotReview.data.size == 0){
+                                                        Navigator.push(
+                                                            context,
+                                                            MaterialPageRoute(builder: (context) => RateForm(snapshot.data.get('customer_id'),snapshot.data.id,snapshot.data.get('hero_id'),snapshot.data.get('customer_name'))));
+                                                      }else{
+                                                        Toast.show("Sorry, You've already rated this client.", context, duration: Toast.LENGTH_LONG, gravity:  Toast.BOTTOM);
+                                                      }
+
+                                                      },
+                                                      child: Text("RATE CLIENT", style: TextStyle(
+                                                        color: Colors.white,fontSize: 12.0,
+                                                      )));
+
+
+                                              }
+
+
+                                        }
+                                      ),
+
                                       SizedBox(height: 10),
-
-
-
-
                                       //for_confirmation
                                       confirm_status ?
                                       Column(
@@ -768,6 +807,12 @@ Stream<DocumentSnapshot> getBookingDataSnapshots(BuildContext context,String Boo
   //
   // data.add(BookingData);
   // yield data;
+}
+
+Stream<QuerySnapshot> getReviewDataSnapshots(BuildContext context,String BookingID) async* {
+  yield* FirebaseFirestore.instance.collection('customer_review').where(
+      'booking_id', isEqualTo: BookingID).snapshots();
+
 }
 
 
